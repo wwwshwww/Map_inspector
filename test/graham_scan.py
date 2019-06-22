@@ -1,10 +1,12 @@
 import numpy as np
 import math
 import collections
+import cv2
+import matplotlib.pyplot as plt
 
 def main():
     a = np.zeros([50,50], dtype=int)
-    a[2,4] = 255
+    a[2,2] = 255
     a[4,49] = 255
     a[42,7] = 255
     a[48, 40] = 255
@@ -36,6 +38,21 @@ def main():
         else:
             hull.append(tmpi)
 
+    plt.gray()
+    plt.imshow(a)
+    plt.show()
+
+    convex_pts = np.zeros([len(hull), 2], dtype=int)
+    count = 0
+    for i in hull:
+        convex_pts[count] = (points[1][i], points[0][i])
+        count += 1
+
+    img = cv2.fillConvexPoly(a, convex_pts, 255)
+    img = cv2.UMat.get(img)
+    plt.imshow(img)
+    plt.show()
+    print(convex_pts)
     print(hull)
 
 
