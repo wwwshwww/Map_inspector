@@ -7,10 +7,12 @@ import matplotlib.pyplot as plt
 def main():
     a = np.zeros([50,50], dtype=int)
     a[2,2] = 255
-    a[4,49] = 255
+    a[4,35] = 255
     a[42,7] = 255
     a[48, 40] = 255
-    a[25,25] = 255
+    a[25,1] = 255
+    a[22,26] = 255
+    a[23,25] = 255
 
     points = np.where(a>=1)
     print(points)
@@ -25,18 +27,22 @@ def main():
     index = np.argsort(angles)
     print(angles, index)
 
-    now_angle = -999
     hull = collections.deque()
     hull.append(index[0])
-    for i in range(1, len(index)):
-        tmpi = hull.pop()
-        tmpang = get_angle(points, tmpi, index[i])
-        if tmpang >= now_angle:
-            hull.append(tmpi)
-            hull.append(index[i])
-            now_angle = tmpang
-        else:
-            hull.append(tmpi)
+    hull.append(index[1])
+
+    vec = lambda m, s: [points[0][s]-points[0][m], points[1][s]-points[1][m]]
+
+    for i in range(2, len(index)):
+        while True:
+            tmpi = hull.pop()
+            last = hull[-1]
+            tcross = np.cross(vec(last,tmpi), vec(tmpi,index[i]))
+            print(tmpi, index[i], tcross)
+            if tcross >= 0:
+                hull.append(tmpi)
+                hull.append(index[i])
+                break
 
     plt.gray()
     plt.imshow(a)
@@ -59,7 +65,7 @@ def main():
 def get_angle(points, p1, p2): # p1, p2 : index
     dx = points[0][p2] - points[0][p1]
     dy = points[1][p2] - points[1][p1]
-    return normalize(math.atan2(dy,dx))
+    return math.atan2(dy,dx)
 
 def normalize(rad):
     ret = rad % math.pi
