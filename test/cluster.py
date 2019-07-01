@@ -25,64 +25,67 @@ def get_test_img():
     im[451,456] = 255
     return im
 
+class point_cluster():
+    def __init__(self, img):
+        self.img = img
+
+    def get_clusters_black(self, size, erea_start=0, erea_end=None):
+        if erea_end is None: 
+            erea_end = len(self.img)-1
+        # points = np.where(im>=255)
+        points = np.where(self.img==0)
+        used = np.full_like(self.img, False)
+        clusters = collections.deque()
+
+        for (i, j) in zip(points[0], points[1]):
+            print(used[i,j], (i,j))
+            if used[i,j]: continue
+            print(f"\n===={i,j}====\n")
+            tmp = collections.deque()
+            clust = collections.deque()
+            tmp.append((i, j))
+            clust.append((i, j))
+            used[i,j] = True
+            while not len(tmp)==0:
+                print(tmp)
+                pt = tmp.pop()
+                si = max(erea_start, pt[0]-size)
+                ei = min(erea_end, pt[0]+size)
+                sj = max(erea_start, pt[1]-size)
+                ej = min(erea_end, pt[1]+size)
+                # erea = self.img[si:ei+1, sj:ej+1]
+                # print((i,j),erea)
+                grid_i, grid_j = np.meshgrid(range(si,ei+1), range(sj,ej+1), indexing='ij')
+                print(grid_i, grid_j)
+                dis_i = (np.full_like(grid_i, pt[0])-grid_i)**2
+                print(dis_i)
+                dis_j = (np.full_like(grid_j, pt[1])-grid_j)**2
+                print(dis_j)
+                dis_filter = np.sqrt(dis_i+dis_j)<=size
+                print(dis_filter)
+                # f = np.where(np.logical_and(self.img[si:ei+1, sj:ej+1]>=255, dis_filter))
+                f = np.where(np.logical_and(self.img[si:ei+1, sj:ej+1]==0, dis_filter))
+                print(f)
+
+                for (ii, jj) in zip(f[0], f[1]):
+                    tmp_p = (grid_i[ii,jj], grid_j[jj,jj])
+                    print(tmp_p)
+                    if used[tmp_p]: continue
+                    used[tmp_p] = True
+                    print(tmp_p,"2")
+                    tmp.append(tmp_p)
+                    clust.append(tmp_p)
+            clusters.append(clust)
+
+        return clusters
+    
 def main():
     # im = get_test_img()
     path = this_path + '../abstraction_map/map_data/2019-06-05_sample.map.pgm'
     im = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
     
-    # points = np.where(im>=255)
-    points = np.where(im==0)
-    used = np.full_like(im, False)
-    size = 5
-    clusters = collections.deque()
-
-    ereas = 0
-    ereae = len(im)-1
-
-    for (i, j) in zip(points[0], points[1]):
-        print(used[i,j], (i,j))
-        if used[i,j]: continue
-        print(f"\n===={i,j}====\n")
-        tmp = collections.deque()
-        clust = collections.deque()
-        tmp.append((i, j))
-        clust.append((i, j))
-        used[i,j] = True
-        while not len(tmp)==0:
-            print(tmp)
-            pt = tmp.pop()
-            si = max(ereas, pt[0]-size)
-            ei = min(ereae, pt[0]+size)
-            sj = max(ereas, pt[1]-size)
-            ej = min(ereae, pt[1]+size)
-            erea = im[si:ei+1, sj:ej+1]
-            # f = np.where(im[si:ei+1, sj:ej+1]>=255)
-            # f = np.where(im[si:ei+1, sj:ej+1]==0)
-            print((i,j),erea)
-            grid_i, grid_j = np.meshgrid(range(si,ei+1), range(sj,ej+1), indexing='ij')
-            print(grid_i, grid_j)
-            dis_i = (np.full_like(grid_i, pt[0])-grid_i)**2
-            print(dis_i)
-            dis_j = (np.full_like(grid_j, pt[1])-grid_j)**2
-            print(dis_j)
-            dis_filter = np.sqrt(dis_i+dis_j)<=size
-            print(dis_filter)
-            # f = np.where(np.logical_and(erea>=255, dis_filter))
-            f = np.where(np.logical_and(erea==0, dis_filter))
-            print(f)
-
-            for (ii, jj) in zip(f[0], f[1]):
-                tmp_p = (grid_i[ii,jj], grid_j[jj,jj])
-                print(tmp_p)
-                if used[tmp_p]: continue
-                used[tmp_p] = True
-                print(tmp_p,"2")
-                tmp.append(tmp_p)
-                clust.append(tmp_p)
-        clusters.append(clust)
-    
-    print(clusters)
-    
+    c = point_cluster(im)
+    print(c.get_clusters_black(size=5))
 
 if __name__ == "__main__":
     main()
