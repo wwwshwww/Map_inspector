@@ -33,7 +33,7 @@ class point_cluster():
         if erea_end is None: 
             erea_end = len(self.img)-1
         # points = np.where(im>=255)
-        points = np.where(self.img==0)
+        points = np.where(self.img<50)
         used = np.full_like(self.img, False)
         clusters = collections.deque()
 
@@ -78,14 +78,3 @@ class point_cluster():
             clusters.append(clust)
 
         return clusters
-    
-def main():
-    # im = get_test_img()
-    path = this_path + '../abstraction_map/map_data/2019-06-05_sample.map.pgm'
-    im = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
-    
-    c = point_cluster(im)
-    print(c.get_clusters_black(size=5))
-
-if __name__ == "__main__":
-    main()

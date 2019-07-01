@@ -53,12 +53,12 @@ def main():
     for i in hull:
         convex_pts[count] = (points[1][i], points[0][i])
         count += 1
-
-    img = cv2.fillConvexPoly(a, convex_pts, 255)
+    print(convex_pts.reshape((1,-1,2)))
+    # img = cv2.polylines(a, convex_pts.reshape((1,-1,2)), True, 255)
+    img = cv2.fillConvexPoly(a, convex_pts.reshape((1,-1,2)), 255)
     img = cv2.UMat.get(img)
     plt.imshow(img)
     plt.show()
-    print(convex_pts)
     print(hull)
 
 
