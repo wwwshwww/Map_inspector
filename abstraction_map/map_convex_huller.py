@@ -39,7 +39,6 @@ def fill_convex(img, points):
     for i in hull:
         convex_pts[count] = (points[i][1], points[i][0])
         count += 1
-
     # newimg = cv2.polylines(img, convex_pts.reshape((1,-1,2)), True, 100)
     newimg = cv2.fillConvexPoly(img, convex_pts.reshape((1,-1,2)), 100)
     # newimg = cv2.UMat.get(newimg)
@@ -59,7 +58,7 @@ def main():
     plt.show()
 
     c = point_cluster(img)
-    cb = c.get_clusters_black(size=8)
+    cb = c.get_clusters_black(size=4)
     newimg = img.copy()
     for o in cb:
         if len(o) < 2: continue
