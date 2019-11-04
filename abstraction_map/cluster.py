@@ -10,7 +10,7 @@ import sys
 this_path = os.path.dirname(__file__)
 
 def get_test_img():
-    im = np.zeros([500, 500], dtype=int);
+    im = np.zeros([500, 500], dtype=int)
     im[2,2] = 255
     im[4,35] = 255
     im[42,7] = 255

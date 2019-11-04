@@ -80,9 +80,9 @@ class point_cluster():
         return clusters
     
 def main():
-    # im = get_test_img()
+    im = get_test_img()
     path = this_path + '../abstraction_map/map_data/2019-06-05_sample.map.pgm'
-    im = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    # im = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
     
     c = point_cluster(im)
     print(c.get_clusters_black(size=5))

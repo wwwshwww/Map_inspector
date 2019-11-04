@@ -15,7 +15,7 @@ def fill_convex(img, points):
     for i in range(1,len(angles)):
         angles[i] = get_angle(points, 0, i)
     index = np.argsort(angles)
-    print(angles, index)
+    # print(angles, index)
 
     hull = collections.deque()
     hull.append(index[0])
@@ -28,7 +28,7 @@ def fill_convex(img, points):
             tmpi = hull.pop()
             last = hull[-1]
             tcross = np.cross(vec(last,tmpi), vec(tmpi,index[i]))
-            print(tmpi, index[i], tcross)
+            # print(tmpi, index[i], tcross)
             if tcross >= 0:
                 hull.append(tmpi)
                 hull.append(index[i])
@@ -58,7 +58,8 @@ def main():
     plt.show()
 
     c = point_cluster(img)
-    cb = c.get_clusters_black(size=4)
+    cb = c.get_clusters_black(size=3)
+    print(cb)
     newimg = img.copy()
     for o in cb:
         if len(o) < 2: continue
