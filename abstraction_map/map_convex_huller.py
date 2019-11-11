@@ -9,7 +9,7 @@ from cluster import point_cluster
 
 this_path = os.path.dirname(__file__)
 
-def fill_convex(img, points):
+def fill_convex(img, points, fill_color):
     angles = np.zeros([len(points)])
     angles[0] = -999
     for i in range(1,len(angles)):
@@ -40,7 +40,7 @@ def fill_convex(img, points):
         convex_pts[count] = (points[i][1], points[i][0])
         count += 1
     # newimg = cv2.polylines(img, convex_pts.reshape((1,-1,2)), True, 100)
-    newimg = cv2.fillConvexPoly(img, convex_pts.reshape((1,-1,2)), 100)
+    newimg = cv2.fillConvexPoly(img, convex_pts.reshape((1,-1,2)), fill_color)
     # newimg = cv2.UMat.get(newimg)
     return newimg
 
@@ -59,11 +59,11 @@ def main():
 
     c = point_cluster(img)
     cb = c.get_clusters_black(size=3)
-    print(cb)
+    print(cb, len(cb))
     newimg = img.copy()
-    for o in cb:
+    for i, o in enumerate(cb):
         if len(o) < 2: continue
-        newimg = fill_convex(newimg, list(o))
+        newimg = fill_convex(newimg, list(o), 255//len(cb)*i)
 
     plt.imshow(newimg)
     plt.show()

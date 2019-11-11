@@ -48,6 +48,7 @@ class obstacle():
         self.have_child = True
         return get_obstacles(self.minimap, threshhold)
 
+
 def get_obstacles(img, threshhold) -> list:
     pc = point_cluster(img)
     om = ob_map(img)

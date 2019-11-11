@@ -38,16 +38,16 @@ class point_cluster():
         clusters = collections.deque()
 
         for (i, j) in zip(points[0], points[1]):
-            print(used[i,j], (i,j))
+            ##print(used[i,j], (i,j))
             if used[i,j]: continue
-            print(f"\n===={i,j}====\n")
+            ##print(f"\n===={i,j}====\n")
             tmp = collections.deque()
             clust = collections.deque()
             tmp.append((i, j))
             clust.append((i, j))
             used[i,j] = True
             while not len(tmp)==0:
-                print(tmp)
+                ##print(tmp)
                 pt = tmp.pop()
                 si = max(erea_start, pt[0]-size)
                 ei = min(erea_end, pt[0]+size)
@@ -56,23 +56,22 @@ class point_cluster():
                 # erea = self.img[si:ei+1, sj:ej+1]
                 # print((i,j),erea)
                 grid_i, grid_j = np.meshgrid(range(si,ei+1), range(sj,ej+1), indexing='ij')
-                print(grid_i, grid_j)
+                ##print(grid_i, grid_j)
                 dis_i = (grid_i-pt[0])**2
-                print(dis_i)
+                ##print(dis_i)
                 dis_j = (grid_j-pt[1])**2
-                print(dis_j)
+                ##print(dis_j)
                 dis_filter = np.sqrt(dis_i+dis_j)<=size
-                print(dis_filter)
-                # f = np.where(np.logical_and(self.img[si:ei+1, sj:ej+1]>=255, dis_filter))
+                ### f = np.where(np.logical_and(self.img[si:ei+1, sj:ej+1]>=255, dis_filter))
                 f = np.where(np.logical_and(self.img[si:ei+1, sj:ej+1]==0, dis_filter))
-                print(f)
+                ##print(f)
 
                 for (ii, jj) in zip(f[0], f[1]):
                     tmp_p = (grid_i[ii,jj], grid_j[jj,jj])
-                    print(tmp_p)
+                    ##print(tmp_p)
                     if used[tmp_p]: continue
                     used[tmp_p] = True
-                    print(tmp_p,"2")
+                    ##print(tmp_p,"2")
                     tmp.append(tmp_p)
                     clust.append(tmp_p)
             clusters.append(clust)
